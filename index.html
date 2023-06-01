@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+          <style type="text/css">
+                 a:link { color: black; text-decoration: none;}
+                 a:visited { color: black; text-decoration: none;}
+                 a:hover { color: blue; text-decoration: underline;}
+          </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>PauseSpeech Demo</title>
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet">
+        <!-- Fonts CSS-->
+        <link rel="stylesheet" href="css/heading.css">
+        <link rel="stylesheet" href="css/body.css">
+        <script>
+            function createTable(dir, exp, audio, script, idx=1, row=3){
+
+                html = "<table class=\"table table-responsive align-content-center\" style=\"background-color: white; border-radius: 20px\">"
+                html +="<thead><tr><th colspan=\"5\" style=\"width: 40%\">"
+                html +="<div class=\"text-left\">"
+                html += "Script: <i>"
+                html += script["script"]
+                html +="</i></div>"
+                html += "</th></tr></thead>"
+                html +="<tbody><tr>"
+                for(var key in exp){
+                    if (idx % row == 0){
+                        html += "<tr>"    
+                    }
+                    html +="<td style=\"vertical-align: top;\"><p></p>"
+                    html +=key
+                    html +="<div class=\"text-left\"><audio"
+                    if (row>3){
+                        html+= " controls=\"controls\" style=\"width: 220px;\"><source src="
+                    } else {
+                        html+= " controls=\"controls\"><source src="
+                    }
+                    f = dir + "/" + exp[key] + "/" + audio + ".wav"
+                    html += f                    
+                    html +=" type=\"audio/wav\" /></audio></div></td>"
+                    idx += 1
+                    if (idx % row == 0){
+                        html += "</tr>"    
+                    }
+                }
+                html +="</tr></tbody></table>"
+                return html
+            }
+        </script>
+    </head>
+    <body id="page-top">
+        <nav class="navbar navbar-expand-lg bg-secondary fixed-top" id="mainNav">
+            <div class="container"><a class="navbar-brand js-scroll-trigger" href="#page-top">PauseSpeech</a>
+                <button class="navbar-toggler navbar-toggler-right font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu <i class="fas fa-bars"></i></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#abstract">Abstact</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#ps">PauseSpeech<br>Demo</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#mc">Comparative<br>Model</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#as">Analysis of Self-supervised <br> Representation</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#abl">Ablation<br>Study</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <header class="masthead bg-white text-left"> <!-- text-black 사용 가능 -->
+            <div class="container d-flex align-items-center flex-column">
+                <!-- Masthead Heading-->
+                <h1 class="masthead-heading mb-0 text-center">PauseSpeech: Natural Speech Synthesis via Pre-trained Language Model and Pause-based Prosody Modeling</h1>
+                <!-- Masthead Subheading-->
+		        <p class="pre-wrap lead">&nbsp;</p>
+                <p class="pre-wrap masthead-subheading font-weight-light mb-0 font-italic">Ji-Sang Hwang, Sang-Hoon Lee, and Seong-Whan Lee</p>
+            </div>
+        </header>
+
+        <!-- Abstraction -->
+        <section class="page-section portfolio" id="abstract">
+            <div class="container">
+                <!-- Portfolio Section Heading-->
+                <div class="text-center">
+                    <h2 class="page-section-heading text-secondary mb-0 d-inline-block">Abstract</h2>
+                </div>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom"></div>
+                </div>
+                <!-- Portfolio Grid Items-->
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 ml-auto">
+                        <p class="pre-wrap lead">Although text-to-speech (TTS) systems have significantly improved, most TTS systems still have limitations in synthesizing speech with appropriate phrasing. For natural speech synthesis, it is important to synthesize the speech with a phrasing structure that groups words into phrases based on semantic information. In this paper, we propose PuaseSpeech, a speech synthesis system with a pre-trained language model and pause-based prosody modeling. First, we introduce a phrasing structure encoder that utilizes a context representation from the pre-trained language model. In the phrasing structure encoder, we extract a speaker-dependent syntactic representation from the context representation and then predict a pause sequence that separates the input text into phrases. Furthermore, we introduce a pause-based word encoder that models word-level prosody based on pause sequence. Experimental results show PauseSpeech outperforms previous models in terms of naturalness. Furthermore, in terms of objective evaluations, we can observe that our proposed methods help the model decrease the distance between ground-truth and synthesized speech.</p>
+                    </div>
+                    <div class="text-center">
+                        <br>
+                        <img width="80%" src="./assets/figure/overall_arch.png">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Proposed Model - PauseSpeech -->
+        <section class="page-section bg-primary text-white mb-0" id="ps">
+            <div class="container">
+                <!-- About Section Heading-->
+                <div class="text-center">
+                    <h2 class="page-section-heading d-inline-block text-white">PauseSpeech</h2>
+                </div>
+                <br>
+                <!-- Sample of PauseSpeech -->
+                <div class="row">
+                    <div id="div1" class="col-lg-auto ml-auto">
+                        <script>
+                            dir = "./assets/wavs/ps"
+                            exp = {"Ground-Truth": "gt",
+                                   "HiFi-GAN (Recon.)": "hifi",
+                                   "PauseSpeech": "ps"}
+                            audios = {
+                                "p361_015_mic1": {"script": "The Greeks used to imagine that it was a sign from the gods to foretell war or heavy rain."},
+                                "p265_182_mic1": {"script": "But a final decision will not be taken until after the elections."},
+                                "p294_021_mic1": {"script": "The difference in the rainbow depends considerably upon the size of the drops, and the width of the colored band increases as the size of the drops increases."},
+                            }
+                            for(var audio in audios){
+                                div = document.getElementById("div1")
+                                script=audios[audio]
+                                html = createTable(dir, exp, audio, script, 0, row=4)
+                                div.insertAdjacentHTML("afterend", html);
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Models Comparison -->
+        <section class="page-section bg-info text-white mb-0" id="mc">
+            <div class="container">
+                <!-- About Section Heading-->
+                <div class="text-center">
+                    <h2 class="page-section-heading d-inline-block text-white">Comparative Model</h2>
+                </div>
+                <br>
+                <!-- Sample of Comparison Models-->
+                <div class="row">
+                    <div id="div2" class="col-lg-auto ml-auto">
+                        <table class="table table-responsive align-content-center" style="background-color: whitesmoke; border-radius: 20px">
+                            <thead>
+                              <tr>
+                                <th colspan="3"><p><em>Sentence 1 (p299): </em></p>
+                                <p><em>The difference in the rainbow depends considerably upon the size of the drops, and the width of the colored band increases as the size of the drops increases.</em></p></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td rowspan="1" style="vertical-align: top;"><p><strong>GT</strong></p>
+                                  <p><em>ASR: The difference in the rainbow depends considerably upon the size of the drops and the width of the <span style="color:red">color</span> band increases as the size of the drops increase.
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/gt/p299_021_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>HiFi-GAN (Recon.)</strong></p>
+                                  <p><em>ASR: The difference in the rainbow depends considerably upon the size of the drops and the width of the <span style="color:red">color</span> band increases as the size of the drops increase.
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/hifi/p299_021_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><p><strong>FastSpeech 2</strong></p>
+                                  <p><em>ASR: The difference in the rainbow depends considerably upon the size of the drops and the width of the colored band increases as the size of the drops increases.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/fast/p299_021_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PortaSpeech</strong></p>
+                                  <p><em>ASR: The difference in the rainbow depends considerably upon the size of the drops and the width of the colored band increases as the size of the drops increases.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/porta/p299_021_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PauseSpeech</strong></p>
+                                  <p><em>ASR: he difference in the rainbow depends considerably upon the size of the drops and the width of the colored band increases as the size of the drops increases.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/pause/p299_021_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <p> </p>
+
+                        <table class="table table-responsive align-content-center" style="background-color: whitesmoke; border-radius: 20px">
+                            <thead>
+                              <tr>
+                                <th colspan="3"><p><em>Sentence 2 (p238): </em></p>
+                                <p><em>Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.</em></p></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td rowspan="1" style="vertical-align: top;"><p><strong>GT</strong></p>
+                                  <p><em>ASR: Six spoons of fresh snow peas five thick slabs of blue cheese and maybe a snack for her brother Bob.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/gt/p238_003_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>HiFi-GAN (Recon.)</strong></p>
+                                  <p><em>ASR: Six spoons of fresh snow peas five thick slabs of blue cheese and maybe a snack for her brother Bob.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/hifi/p238_003_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><p><strong>FastSpeech 2</strong></p>
+                                  <p><em>ASR: Six spoons of fresh snow peas five thick slabs of blue cheese and maybe a <span style="color:red">snuck</span> for her brother Bob.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/fast/p238_003_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PortaSpeech</strong></p>
+                                  <p><em>ASR: Six spoons of fresh <span style="color:red">sano</span> peas five thick slabs of blue cheese and maybe a snack for her brother <span style="color:red">Bub</span>.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/porta/p238_003_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PauseSpeech</strong></p>
+                                  <p><em>ASR: Six spoons of fresh snow peas five thick slabs of blue cheese and maybe a snack for her brother Bob.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/pause/p238_003_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <p> </p>
+
+                        <table class="table table-responsive align-content-center" style="background-color: whitesmoke; border-radius: 20px">
+                            <thead>
+                              <tr>
+                                <th colspan="3"><p><em>Sentence 3 (p335): </em></p>
+                                <p><em>JOHN Anderson, the former Scottish national coach, is still unearthing talent.</em></p></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td rowspan="1" style="vertical-align: top;"><p><strong>GT</strong></p>
+                                  <p><em>ASR: JOHN Anderson the former Scottish national coach is still unearthing talent.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/gt/p335_120_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>HiFi-GAN (Recon.)</strong></p>
+                                  <p><em>ASR: JOHN Anderson the former Scottish national coach is still unearthing talent.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/hifi/p335_120_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><p><strong>FastSpeech 2</strong></p>
+                                  <p><em>ASR: JOHN <span style="color:red">Enderson</span> the former Scottish national coach is still unearthing talent.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/fast/p335_120_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PortaSpeech</strong></p>
+                                  <p><em>ASR: JOHN Anderson the former Scottish national coach is still <span style="color:red">anearthing</span> talent.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/porta/p335_120_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PauseSpeech</strong></p>
+                                  <p><em>ASR: JOHN Anderson the former Scottish national coach is still <span style="color:red">on erathing</span> talent.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/pause/p335_120_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <p> </p>
+
+                        <table class="table table-responsive align-content-center" style="background-color: whitesmoke; border-radius: 20px">
+                            <thead>
+                              <tr>
+                                <th colspan="3"><p><em>Sentence 4 (p360): </em></p>
+                                <p><em>Scotland, is an increasing concern for young people.</em></p></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td rowspan="1" style="vertical-align: top;"><p><strong>GT</strong></p>
+                                  <p><em>ASR: Scotland is <span style="color:red">a</span> increasing concern for young people.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/gt/p360_131_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>HiFi-GAN (Recon.)</strong></p>
+                                  <p><em>ASR: Scotland is an increasing concern for young people.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/hifi/p360_131_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><p><strong>FastSpeech 2</strong></p>
+                                  <p><em>ASR: Scotland is an increasing concern for young people.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/fast/p360_131_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PortaSpeech</strong></p>
+                                  <p><em>ASR: Scotland is an increasing concern for young people.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/porta/p360_131_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PauseSpeech</strong></p>
+                                  <p><em>ASR: Scotland is an increasing concern for young people.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/pause/p360_131_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <p> </p>
+
+                        <table class="table table-responsive align-content-center" style="background-color: whitesmoke; border-radius: 20px">
+                            <thead>
+                              <tr>
+                                <th colspan="3"><p><em>Sentence 5 (p360): </em></p>
+                                <p><em>But the main issue will be the sale of Burger King.</em></p></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td rowspan="1" style="vertical-align: top;"><p><strong>GT</strong></p>
+                                  <p><em>ASR: But the main issue will be the sale of <span style="color:red">Berger</span> king.</em></p>
+                                    Scotland is <span style="color:red">a</span> increasing concern for young people.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/gt/p283_387_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>HiFi-GAN (Recon.)</strong></p>
+                                  <p><em>ASR: But the main issue will be the sale of <span style="color:red">Berger</span> king.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/hifi/p283_387_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><p><strong>FastSpeech 2</strong></p>
+                                  <p><em>ASR: But the <span style="color:red">maiden she</span> will be the <span style="color:red">sail</span> of <span style="color:red">Berger</span> king.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/fast/p283_387_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PortaSpeech</strong></p>
+                                  <p><em>ASR: But the main issue will be the <span style="color:red">sail</span> of <span style="color:red">Bergo</span> king.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/porta/p283_387_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                                <td><p><strong>PauseSpeech</strong></p>
+                                  <p><em>ASR: But the main issue will be the sale of <span style="color:red">Berger</span> king.</em></p>
+                                  <audio id="player" controls >
+                                      <source src="./assets/wavs/compare/pause/p283_387_mic1.wav" type="audio/wav" />
+                                  </audio>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <p> </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Self-supervised Representation -->
+        <section class="page-section bg-primary text-white mb-0" id="as">
+            <div class="container">
+                <!-- About Section Heading-->
+                <div class="text-center">
+                    <h2 class="page-section-heading d-inline-block text-white">Analysis of Self-supervised Representation</h2>
+                </div>
+                <br>
+                <!-- Sample of Comparison Models-->
+                <div class="row">
+                    <div id="div3" class="col-lg-auto ml-auto">
+                        <script>
+                            dir = "./assets/wavs/self"
+                            exp = {"Ground-Truth": "gt",
+                                    "Lower layer (1st)": "1st",
+                                    "Middle layer (9th)": "9th",
+                                    "Higher layer (12th)": "12th",
+                            }
+                            audios = {
+                                "p297_004_mic1": {"script": "We also need a small plastic snake and a big toy frog for the kids."},
+                                "p238_035_mic1": {"script": "Of course, on Tuesday, United were beaten despite this."},
+                                "p361_008_mic1": {"script": "These take the shape of a long round arch, with its path high above, and its two ends apparently beyond the horizon."},
+                            }
+                            for(var audio in audios){
+                                div = document.getElementById("div3")
+                                script=audios[audio]
+                                html = createTable(dir, exp, audio, script, 2, row=3)
+                                div.insertAdjacentHTML("afterend", html);
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ablation Study -->
+        <section class="page-section bg-info text-white mb-0" id="abl">
+            <div class="container">
+                <!-- About Section Heading-->
+                <div class="text-center">
+                    <h2 class="page-section-heading d-inline-block text-white">Ablation Study</h2>
+                </div>
+                <br>
+                <!-- Sample of Comparison Models-->
+                <div class="row">
+                    <div id="div4" class="col-lg-auto ml-auto">
+                        <script>
+                            dir = "./assets/wavs/abl"
+                            exp = {"Ground-Truth": "gt",
+                                   "PauseSpeech": "ps",
+                                   "w/o pause-based word encoder": "no_pw",
+                                   "w/o phrasing structure encoder": "no_ps",
+                                   "w/o adversarial learning": "no_adv",
+                            }
+                            audios = {
+                                "p282_213_mic1": {"script": "On a technical level, they were not afraid to play good football."},
+                                "p265_291_mic1": {"script": "They included certain insurance policies, and his share of the house."},
+                                "p326_023_mic1": {"script": "If the red of the second bow falls upon the green of the first, the result is to give a bow with an abnormally wide yellow band, since red and green light when mixed form yellow."},
+                            }
+                            for(var audio in audios){
+                                div = document.getElementById("div4")
+                                script=audios[audio]
+                                html = createTable(dir, exp, audio, script, 2, row=4)
+                                div.insertAdjacentHTML("afterend", html);
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="scroll-to-top d-lg-none position-fixed"><a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a></div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <script src="js/scripts.js"></script>
+        <!-- Bootstrap slider JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous"></script>
+        <!-- slider JS -->
+        <script type="text/javascript">
+        </script>
+    </body>
+</html>
